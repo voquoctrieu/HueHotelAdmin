@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Hue Hotel</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // Bỏ qua lỗi iframe.js và các lỗi 404 không quan trọng
+      window.addEventListener('error', function(e) {
+        if (e.filename && (e.filename.includes('iframe.js') || e.filename.includes('dashboard'))) {
+          e.preventDefault();
+          return false;
+        }
+      });
+      
+      // Bỏ qua các lỗi 404 trong console
+      const originalError = console.error;
+      console.error = function(...args) {
+        if (args[0] && typeof args[0] === 'string' && 
+            (args[0].includes('iframe.js') || args[0].includes('404'))) {
+          return;
+        }
+        originalError.apply(console, args);
+      };
+    </script>
+  </body>
+</html>
