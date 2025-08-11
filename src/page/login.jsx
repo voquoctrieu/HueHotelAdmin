@@ -98,7 +98,7 @@ const Login = () => {
           display: 'flex',
           alignItems: 'center',
         justifyContent: 'center',
-        backgroundImage: `url('/huecity.jpg')`,
+        backgroundImage: `url('./huecity.jpg')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
