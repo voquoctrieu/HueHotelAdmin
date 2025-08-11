@@ -56,9 +56,9 @@ const CustomerManagement = () => {
       idCard: '123456789012',
       status: 'active',
       totalBookings: 5,
-      totalSpent: 15000000,
-      lastVisit: '2024-03-07',
-      createdAt: '2023-01-15',
+      totalSpent: 3500000,
+      lastVisit: '2025-03-07',
+      createdAt: '2025-01-15',
     },
     {
       id: 2,
@@ -69,9 +69,9 @@ const CustomerManagement = () => {
       idCard: '987654321098',
       status: 'active',
       totalBookings: 3,
-      totalSpent: 8500000,
-      lastVisit: '2024-03-05',
-      createdAt: '2023-03-20',
+      totalSpent: 1800000,
+      lastVisit: '2025-03-05',
+      createdAt: '2025-03-20',
     },
     {
       id: 3,
@@ -82,9 +82,9 @@ const CustomerManagement = () => {
       idCard: '456789123456',
       status: 'inactive',
       totalBookings: 1,
-      totalSpent: 2500000,
-      lastVisit: '2024-02-15',
-      createdAt: '2023-06-10',
+      totalSpent: 800000,
+      lastVisit: '2025-02-15',
+      createdAt: '2025-06-10',
     },
     {
       id: 4,
@@ -95,8 +95,8 @@ const CustomerManagement = () => {
       idCard: '789123456789',
       status: 'active',
       totalBookings: 8,
-      totalSpent: 22000000,
-      lastVisit: '2024-03-06',
+      totalSpent: 5200000,
+      lastVisit: '2025-03-06',
       createdAt: '2022-12-05',
     },
     {
@@ -108,9 +108,9 @@ const CustomerManagement = () => {
       idCard: '321098765432',
       status: 'active',
       totalBookings: 2,
-      totalSpent: 6000000,
-      lastVisit: '2024-03-01',
-      createdAt: '2023-08-15',
+      totalSpent: 1200000,
+      lastVisit: '2025-03-01',
+      createdAt: '2025-08-15',
     },
   ]);
 
@@ -182,14 +182,14 @@ const CustomerManagement = () => {
       setError('');
 
       if (selectedCustomer) {
-        // Cập nhật khách hàng
+ 
         const updatedCustomers = customers.map(customer =>
           customer.id === selectedCustomer.id ? { ...customer, ...data } : customer
         );
         setCustomers(updatedCustomers);
         setSnackbar({ open: true, message: 'Cập nhật khách hàng thành công!', severity: 'success' });
       } else {
-        // Thêm khách hàng mới
+        
         const newCustomer = {
           id: customers.length + 1,
           ...data,
@@ -229,7 +229,7 @@ const CustomerManagement = () => {
         Quản lý khách hàng
       </Typography>
       
-      {/* Search and Filter Controls */}
+      {/*  */}
       <Box sx={{ 
         mb: 3, 
         display: 'flex', 
@@ -319,7 +319,7 @@ const CustomerManagement = () => {
         </Button>
       </Box>
 
-      {/* Table */}
+      {/*  */}
       <Paper sx={{ width: '100%', overflow: 'hidden' }}>
         <TableContainer sx={{ maxHeight: 600 }}>
           <Table stickyHeader>

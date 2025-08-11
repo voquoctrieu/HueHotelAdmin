@@ -39,7 +39,7 @@ const Statistics = () => {
         return [
           {
             id: 'HD001',
-            date: '07/08/2024',
+            date: '07/08/2025',
             customer: 'Nguyễn Văn A',
             room: 'Gia đình 101',
             amount: 700000,
@@ -47,7 +47,7 @@ const Statistics = () => {
           },
           {
             id: 'HD002',
-            date: '07/08/2024',
+            date: '07/08/2025',
             customer: 'Trần Thị B',
             room: 'Đôi 201',
             amount: 400000,
@@ -55,7 +55,7 @@ const Statistics = () => {
           },
           {
             id: 'HD003',
-            date: '06/08/2024',
+            date: '06/08/2025',
             customer: 'Lê Văn C',
             room: '3 người 301',
             amount: 500000,
@@ -66,7 +66,7 @@ const Statistics = () => {
         return [
           {
             id: 'HD001',
-            date: '25/08/2024',
+            date: '25/08/2025',
             customer: 'Nguyễn Văn A',
             room: 'Gia đình 101',
             amount: 2100000,
@@ -74,7 +74,7 @@ const Statistics = () => {
           },
           {
             id: 'HD002',
-            date: '18/08/2024',
+            date: '18/08/2025',
             customer: 'Trần Thị B',
             room: 'Đôi 201',
             amount: 1200000,
@@ -82,7 +82,7 @@ const Statistics = () => {
           },
           {
             id: 'HD003',
-            date: '10/08/2024',
+            date: '10/08/2025',
             customer: 'Lê Văn C',
             room: '3 người 301',
             amount: 1500000,
@@ -93,7 +93,7 @@ const Statistics = () => {
         return [
           {
             id: 'HD001',
-            date: '15/08/2024',
+            date: '15/08/2025',
             customer: 'Nguyễn Văn A',
             room: 'Gia đình 101',
             amount: 6300000,
@@ -101,7 +101,7 @@ const Statistics = () => {
           },
           {
             id: 'HD002',
-            date: '15/07/2024',
+            date: '15/07/2025',
             customer: 'Trần Thị B',
             room: 'Đôi 201',
             amount: 5600000,
@@ -109,7 +109,7 @@ const Statistics = () => {
           },
           {
             id: 'HD003',
-            date: '15/06/2024',
+            date: '15/06/2025',
             customer: 'Lê Văn C',
             room: '3 người 301',
             amount: 7500000,
@@ -120,7 +120,7 @@ const Statistics = () => {
         return [
           {
             id: 'HD001',
-            date: 'Q4/2024',
+            date: 'Q4/2025',
             customer: 'Nguyễn Văn A',
             room: 'Gia đình 101',
             amount: 25200000,
@@ -128,7 +128,7 @@ const Statistics = () => {
           },
           {
             id: 'HD002',
-            date: 'Q3/2024',
+            date: 'Q3/2025',
             customer: 'Trần Thị B',
             room: 'Đôi 201',
             amount: 22000000,
@@ -136,7 +136,7 @@ const Statistics = () => {
           },
           {
             id: 'HD003',
-            date: 'Q2/2024',
+            date: 'Q2/2025',
             customer: 'Lê Văn C',
             room: '3 người 301',
             amount: 24000000,

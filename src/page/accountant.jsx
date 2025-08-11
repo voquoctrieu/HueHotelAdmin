@@ -25,6 +25,8 @@ import {
   MenuItem,
   Chip,
   Divider,
+  Tabs,
+  Tab,
 } from '@mui/material';
 import {
   AttachMoney as MoneyIcon,
@@ -41,7 +43,7 @@ const AccountantDashboard = () => {
   const recentTransactions = [
     {
       id: 1,
-      date: '2024-02-20',
+      date: '2025-02-20',
       description: 'Thanh toán phòng Gia đình 101',
       amount: '700,000 VND',
       type: 'Thu',
@@ -49,7 +51,7 @@ const AccountantDashboard = () => {
     },
     {
       id: 2,
-      date: '2024-02-19',
+      date: '2025-02-19',
       description: 'Chi phí bảo trì',
       amount: '500,000 VND',
       type: 'Chi',
@@ -57,7 +59,7 @@ const AccountantDashboard = () => {
     },
     {
       id: 3,
-      date: '2024-02-18',
+      date: '2025-02-18',
       description: 'Thanh toán phòng Đôi 103',
       amount: '400,000 VND',
       type: 'Thu',
@@ -70,38 +72,92 @@ const AccountantDashboard = () => {
   const [confirmDelete, setConfirmDelete] = useState({ open: false, transactionId: null });
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const [transactions, setTransactions] = useState(recentTransactions);
+  const [selectedTimeRange, setSelectedTimeRange] = useState(0);
+  
+  // Dữ liệu doanh thu theo các khoảng thời gian
+  const revenueData = {
+    today: {
+      revenue: 2500000,
+      expenses: 800000,
+      profit: 1700000,
+      transactions: 8
+    },
+    week7: {
+      revenue: 14900000,
+      expenses: 5200000,
+      profit: 9700000,
+      transactions: 45
+    },
+    month: {
+      revenue: 150000000,
+      expenses: 50000000,
+      profit: 100000000,
+      transactions: 180
+    },
+    quarter: {
+      revenue: 450000000,
+      expenses: 150000000,
+      profit: 300000000,
+      transactions: 540
+    },
+    year: {
+      revenue: 1800000000,
+      expenses: 600000000,
+      profit: 1200000000,
+      transactions: 2160
+    }
+  };
 
-  const stats = [
-    {
-      title: 'Doanh thu tháng',
-      value: '150,000,000 VND',
-      icon: <MoneyIcon sx={{ fontSize: 40 }} />,
-      color: '#1976d2',
-    },
-    {
-      title: 'Chi phí tháng',
-      value: '50,000,000 VND',
-      icon: <AccountIcon sx={{ fontSize: 40 }} />,
-      color: '#d32f2f',
-    },
-    {
-      title: 'Lợi nhuận tháng',
-      value: '100,000,000 VND',
-      icon: <TrendingUpIcon sx={{ fontSize: 40 }} />,
-      color: '#2e7d32',
-    },
-    {
-      title: 'Hóa đơn chờ xử lý',
-      value: '15',
-      icon: <ReceiptIcon sx={{ fontSize: 40 }} />,
-      color: '#ed6c02',
-    },
+  const timeRangeLabels = [
+    'Hôm nay',
+    '7 ngày qua', 
+    'Tháng này',
+    'Quý này',
+    'Năm này'
   ];
+
+  const timeRangeKeys = ['today', 'week7', 'month', 'quarter', 'year'];
+
+  const handleTimeRangeChange = (event, newValue) => {
+    setSelectedTimeRange(newValue);
+  };
+
+  const getCurrentStats = () => {
+    const currentKey = timeRangeKeys[selectedTimeRange];
+    const data = revenueData[currentKey];
+    
+    return [
+      {
+        title: `Doanh thu ${timeRangeLabels[selectedTimeRange].toLowerCase()}`,
+        value: `${(data.revenue / 1000000).toLocaleString()}M VND`,
+        icon: <MoneyIcon sx={{ fontSize: 40 }} />,
+        color: '#1976d2',
+      },
+      {
+        title: `Chi phí ${timeRangeLabels[selectedTimeRange].toLowerCase()}`,
+        value: `${(data.expenses / 1000000).toLocaleString()}M VND`,
+        icon: <AccountIcon sx={{ fontSize: 40 }} />,
+        color: '#d32f2f',
+      },
+      {
+        title: `Lợi nhuận ${timeRangeLabels[selectedTimeRange].toLowerCase()}`,
+        value: `${(data.profit / 1000000).toLocaleString()}M VND`,
+        icon: <TrendingUpIcon sx={{ fontSize: 40 }} />,
+        color: '#2e7d32',
+      },
+      {
+        title: `Giao dịch ${timeRangeLabels[selectedTimeRange].toLowerCase()}`,
+        value: data.transactions.toString(),
+        icon: <ReceiptIcon sx={{ fontSize: 40 }} />,
+        color: '#ed6c02',
+      },
+    ];
+  };
 
   const expenses = [
     {
       id: 'CT001',
-      date: '07/03/2024',
+      date: '07/03/2025',
       category: 'Tiền lương',
       description: 'Lương nhân viên tháng 3',
       amount: 25000000,
@@ -109,7 +165,7 @@ const AccountantDashboard = () => {
     },
     {
       id: 'CT002',
-      date: '07/03/2024',
+      date: '07/03/2025',
       category: 'Tiện ích',
       description: 'Hóa đơn điện nước tháng 3',
       amount: 3500000,
@@ -117,7 +173,7 @@ const AccountantDashboard = () => {
     },
     {
       id: 'CT003',
-      date: '06/03/2024',
+      date: '06/03/2025',
       category: 'Bảo trì',
       description: 'Sửa chữa hệ thống điều hòa',
       amount: 1800000,
@@ -160,44 +216,74 @@ const AccountantDashboard = () => {
       </Typography>
 
       {/* Thống kê */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        {stats.map((stat, index) => (
-          <Grid item xs={12} sm={6} md={3} key={index}>
-            <Card
-              sx={{
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                transition: 'transform 0.2s',
-                '&:hover': {
-                  transform: 'translateY(-4px)',
-                  boxShadow: 3,
-                },
-              }}
-            >
-              <CardContent>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <Box>
-                    <Typography color='textSecondary' gutterBottom>
-                      {stat.title}
-                    </Typography>
-                    <Typography variant='h5' component='div'>
-                      {stat.value}
-                    </Typography>
+      <Paper sx={{ p: 3, mb: 4, borderRadius: 2 }}>
+        <Typography variant='h6' gutterBottom sx={{ mb: 2 }}>
+          Thống kê doanh thu
+        </Typography>
+        
+        {/* Tabs chọn khoảng thời gian */}
+        <Tabs 
+          value={selectedTimeRange} 
+          onChange={handleTimeRangeChange}
+          variant="scrollable"
+          scrollButtons="auto"
+          sx={{
+            mb: 3,
+            '& .MuiTab-root': {
+              minWidth: 120,
+              fontWeight: 600,
+            },
+            '& .Mui-selected': {
+              color: '#1976d2',
+              fontWeight: 700,
+            }
+          }}
+        >
+          {timeRangeLabels.map((label, index) => (
+            <Tab key={index} label={label} />
+          ))}
+        </Tabs>
+
+        {/* Thống kê theo khoảng thời gian được chọn */}
+        <Grid container spacing={3}>
+          {getCurrentStats().map((stat, index) => (
+            <Grid item xs={12} sm={6} md={3} key={index}>
+              <Card
+                sx={{
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  transition: 'transform 0.2s',
+                  '&:hover': {
+                    transform: 'translateY(-4px)',
+                    boxShadow: 3,
+                  },
+                }}
+              >
+                <CardContent>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <Box>
+                      <Typography color='textSecondary' gutterBottom>
+                        {stat.title}
+                      </Typography>
+                      <Typography variant='h5' component='div'>
+                        {stat.value}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ color: stat.color }}>{stat.icon}</Box>
                   </Box>
-                  <Box sx={{ color: stat.color }}>{stat.icon}</Box>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Paper>
 
       {/* Giao dịch gần đây */}
       <Paper sx={{ p: 3, borderRadius: 2 }}>

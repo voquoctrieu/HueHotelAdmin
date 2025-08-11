@@ -21,6 +21,7 @@ import {
   DialogActions,
   IconButton,
   Badge,
+  TextField,
 } from '@mui/material';
 import {
   Hotel as HotelIcon,
@@ -32,29 +33,38 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from 'react';
 
 const ReceptionistDashboard = () => {
+  const [openAddDialog, setOpenAddDialog] = useState(false);
+  const [openDetailDialog, setOpenDetailDialog] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [formData, setFormData] = useState({
+    room: '',
+    customer: '',
+    checkIn: '',
+    checkOut: '',
+  });
   const [bookings, setBookings] = useState([
     {
       id: 'BK001',
       customer: 'Nguyễn Văn A',
       room: 'Gia đình 101',
-      checkIn: '07/08/2024',
-      checkOut: '10/08/2024',
+      checkIn: '07/08/2025',
+      checkOut: '10/08/2025',
       status: 'Đã xác nhận',
     },
     {
       id: 'BK002',
       customer: 'Trần Thị B',
       room: 'Đôi 201',
-      checkIn: '07/08/2024',
-      checkOut: '09/08/2024',
+      checkIn: '07/08/2025',
+      checkOut: '09/08/2025',
       status: 'Chờ xác nhận',
     },
     {
       id: 'BK003',
       customer: 'Lê Văn C',
       room: '3 người 301',
-      checkIn: '06/08/2024',
-      checkOut: '08/08/2024',
+      checkIn: '06/08/2025',
+      checkOut: '08/08/2025',
       status: 'Đã xác nhận',
     },
   ]);
@@ -156,6 +166,50 @@ const ReceptionistDashboard = () => {
     setBookings(bookings.filter(booking => booking.id !== id));
     setConfirmDelete({ open: false, bookingId: null });
     setSnackbar({ open: true, message: 'Xóa đặt phòng thành công!', severity: 'success' });
+  };
+
+  const handleAddBooking = () => {
+    console.log('handleAddBooking called');
+    setOpenAddDialog(true);
+  };
+
+  const handleCloseAddDialog = () => {
+    setOpenAddDialog(false);
+    setFormData({
+      room: '',
+      customer: '',
+      checkIn: '',
+      checkOut: '',
+    });
+  };
+
+  const handleSubmitBooking = () => {
+    if (!formData.room || !formData.customer || !formData.checkIn || !formData.checkOut) {
+      setSnackbar({ open: true, message: 'Vui lòng điền đầy đủ thông tin!', severity: 'error' });
+      return;
+    }
+
+    const newBooking = {
+      id: `BK${String(bookings.length + 1).padStart(3, '0')}`,
+      ...formData,
+      status: 'Chờ xác nhận',
+    };
+    setBookings([...bookings, newBooking]);
+    setSnackbar({ open: true, message: 'Thêm đặt phòng thành công!', severity: 'success' });
+    handleCloseAddDialog();
+  };
+
+  const handleViewDetails = (booking) => {
+    console.log('handleViewDetails called', booking);
+    setSelectedBooking(booking);
+    setOpenDetailDialog(true);
+  };
+
+  const handleFormChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const markNotificationAsRead = (id) => {
@@ -353,6 +407,7 @@ const ReceptionistDashboard = () => {
               <Button
                 variant='contained'
                 color='primary'
+                onClick={handleAddBooking}
                 sx={{
                   px: 3,
                   py: 1,
@@ -401,6 +456,7 @@ const ReceptionistDashboard = () => {
                         <Button
                           variant='outlined'
                           size='small'
+                          onClick={() => handleViewDetails(booking)}
                           sx={{
                             mr: 1,
                             textTransform: 'none',
@@ -454,6 +510,113 @@ const ReceptionistDashboard = () => {
         <DialogActions>
           <Button onClick={() => setConfirmDelete({ open: false, bookingId: null })}>Hủy</Button>
           <Button color="error" onClick={() => handleDelete(confirmDelete.bookingId)}>Xóa</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Dialog thêm đặt phòng */}
+      <Dialog open={openAddDialog} onClose={handleCloseAddDialog} maxWidth='sm' fullWidth>
+        <DialogTitle>Thêm đặt phòng mới</DialogTitle>
+        <DialogContent>
+          <Grid container spacing={2} sx={{ mt: 1 }}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label='Phòng'
+                name='room'
+                value={formData.room}
+                onChange={handleFormChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label='Tên khách'
+                name='customer'
+                value={formData.customer}
+                onChange={handleFormChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label='Ngày check-in'
+                name='checkIn'
+                type='date'
+                value={formData.checkIn}
+                onChange={handleFormChange}
+                required
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label='Ngày check-out'
+                name='checkOut'
+                type='date'
+                value={formData.checkOut}
+                onChange={handleFormChange}
+                required
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseAddDialog}>Hủy</Button>
+          <Button onClick={handleSubmitBooking} variant='contained'>
+            Thêm
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Dialog chi tiết đặt phòng */}
+      <Dialog open={openDetailDialog} onClose={() => setOpenDetailDialog(false)} maxWidth='sm' fullWidth>
+        <DialogTitle>Chi tiết đặt phòng</DialogTitle>
+        <DialogContent>
+          {selectedBooking && (
+            <Grid container spacing={2} sx={{ mt: 1 }}>
+              <Grid item xs={12}>
+                <Typography variant='subtitle2' color='text.secondary'>Mã đặt phòng</Typography>
+                <Typography variant='body1'>{selectedBooking.id}</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant='subtitle2' color='text.secondary'>Phòng</Typography>
+                <Typography variant='body1'>{selectedBooking.room}</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant='subtitle2' color='text.secondary'>Khách hàng</Typography>
+                <Typography variant='body1'>{selectedBooking.customer}</Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography variant='subtitle2' color='text.secondary'>Ngày check-in</Typography>
+                <Typography variant='body1'>{selectedBooking.checkIn}</Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography variant='subtitle2' color='text.secondary'>Ngày check-out</Typography>
+                <Typography variant='body1'>{selectedBooking.checkOut}</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant='subtitle2' color='text.secondary'>Trạng thái</Typography>
+                <Chip
+                  label={selectedBooking.status}
+                  color={
+                    selectedBooking.status === 'Đã xác nhận'
+                      ? 'success'
+                      : selectedBooking.status === 'Chờ xác nhận'
+                      ? 'warning'
+                      : 'default'
+                  }
+                  size='small'
+                />
+              </Grid>
+            </Grid>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDetailDialog(false)}>Đóng</Button>
         </DialogActions>
       </Dialog>
       <Snackbar

@@ -52,16 +52,17 @@ const Dashboard = () => {
     totalRooms: 50,
     occupiedRooms: 35,
     todayBookings: 12,
-    monthlyRevenue: 15000000,
+    monthlyRevenue: 14900000, // Đồng bộ với Statistics (7 ngày qua)
   };
 
   const revenueData = [
-    { month: 'T1', revenue: 12000000 },
-    { month: 'T2', revenue: 13500000 },
-    { month: 'T3', revenue: 14200000 },
-    { month: 'T4', revenue: 13800000 },
-    { month: 'T5', revenue: 15500000 },
-    { month: 'T6', revenue: 15000000 },
+    { month: '01/08', revenue: 1500000 },
+    { month: '02/08', revenue: 1800000 },
+    { month: '03/08', revenue: 1200000 },
+    { month: '04/08', revenue: 2100000 },
+    { month: '05/08', revenue: 2500000 },
+    { month: '06/08', revenue: 2800000 },
+    { month: '07/08', revenue: 3000000 },
   ];
 
   const roomUsageData = [
@@ -228,7 +229,7 @@ const Dashboard = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <Box>
                     <Typography color="textSecondary" gutterBottom variant="body2">
-                      Doanh thu tháng
+                      Doanh thu 7 ngày qua
                     </Typography>
                     <Typography variant="h4">{stats.monthlyRevenue.toLocaleString()}đ</Typography>
                   </Box>
@@ -255,7 +256,7 @@ const Dashboard = () => {
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
-                Doanh thu theo tháng
+                Doanh thu 7 ngày qua
               </Typography>
               <Box sx={{ height: 300, width: '100%' }}>
                 {loading ? (
@@ -265,8 +266,14 @@ const Dashboard = () => {
                     <LineChart data={revenueData}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="month" />
-                      <YAxis />
-                      <Tooltip />
+                      <YAxis 
+                        tickFormatter={(value) => `${(value / 1000000).toFixed(1)}M`}
+                        domain={[0, 'dataMax + 1000000']}
+                      />
+                      <Tooltip 
+                        formatter={(value) => [`${value.toLocaleString()}đ`, 'Doanh thu']}
+                        labelFormatter={(label) => `Tháng ${label}`}
+                      />
                       <Line type="monotone" dataKey="revenue" stroke="#8884d8" strokeWidth={2} />
                     </LineChart>
                   </ResponsiveContainer>

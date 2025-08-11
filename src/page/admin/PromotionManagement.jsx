@@ -42,18 +42,20 @@ const PromotionManagement = () => {
   const [promotions, setPromotions] = useState([
     {
       id: 1,
-      name: 'Khuyến mãi mùa hè',
+      name: '🌞 Khuyến mãi mùa hè 2025',
       code: 'SUMMER2025',
-      discount: '25%',
+      discount: '30%',
       startDate: '2025-06-01',
       endDate: '2025-08-31',
       status: 'Đang áp dụng',
+      description: 'Giảm giá 30% cho tất cả các loại phòng từ tháng 6 đến tháng 8/2025',
+      conditions: 'Áp dụng cho khách hàng đặt phòng trực tiếp và online',
     },
     {
       id: 2,
       name: 'Ưu đãi cuối tuần',
       code: 'WEEKEND',
-      discount: '15%',
+      discount: '20%',
       startDate: '2025-02-01',
       endDate: '2025-12-31',
       status: 'Đang áp dụng',
@@ -70,6 +72,7 @@ const PromotionManagement = () => {
 
   const [confirmDelete, setConfirmDelete] = useState({ open: false, promotionId: null });
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [loading, setLoading] = useState(false);
 
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
@@ -105,20 +108,44 @@ const PromotionManagement = () => {
     });
   };
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async () => {
     try {
       setLoading(true);
-    
-      const newPromotion = {
-        id: promotions.length + 1,
-        ...data,
-        status: 'active',
-      };
-      setPromotions([...promotions, newPromotion]);
-      setSnackbar({ open: true, message: 'Thêm ưu đãi thành công!', severity: 'success' });
+      
+      // Validate required fields
+      if (!formData.name || !formData.code || !formData.discount || !formData.startDate || !formData.endDate) {
+        setSnackbar({ open: true, message: 'Vui lòng điền đầy đủ thông tin!', severity: 'error' });
+        return;
+      }
+
+      if (formData.id) {
+        // Update existing promotion
+        const updatedPromotions = promotions.map(promotion =>
+          promotion.id === formData.id ? { 
+            ...promotion, 
+            ...formData,
+            startDate: formData.startDate.format('YYYY-MM-DD'),
+            endDate: formData.endDate.format('YYYY-MM-DD'),
+          } : promotion
+        );
+        setPromotions(updatedPromotions);
+        setSnackbar({ open: true, message: 'Cập nhật ưu đãi thành công!', severity: 'success' });
+      } else {
+        // Add new promotion
+        const newPromotion = {
+          id: promotions.length + 1,
+          ...formData,
+          startDate: formData.startDate.format('YYYY-MM-DD'),
+          endDate: formData.endDate.format('YYYY-MM-DD'),
+          status: 'Đang áp dụng',
+        };
+        setPromotions([...promotions, newPromotion]);
+        setSnackbar({ open: true, message: 'Thêm ưu đãi thành công!', severity: 'success' });
+      }
+      
       handleClose();
     } catch (error) {
-      setError('Có lỗi xảy ra khi thêm ưu đãi');
+      console.error('Error:', error);
       setSnackbar({ open: true, message: 'Có lỗi xảy ra khi thêm ưu đãi', severity: 'error' });
     } finally {
       setLoading(false);
@@ -168,9 +195,53 @@ const PromotionManagement = () => {
                 </InputAdornment>
               ),
             }}
-            sx={{ minWidth: 200 }}
+            sx={{ 
+              minWidth: 200,
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: 'white',
+                '& fieldset': {
+                  borderColor: '#e0e0e0',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#1976d2',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#1976d2',
+                },
+              },
+              '& .MuiInputLabel-root': {
+                color: '#333',
+              },
+              '& .MuiInputBase-input': {
+                color: '#333',
+                '&::placeholder': {
+                  color: '#666',
+                  opacity: 1,
+                },
+              },
+            }}
           />
-          <FormControl size='small' sx={{ minWidth: 150 }}>
+          <FormControl size='small' sx={{ 
+            minWidth: 150,
+            '& .MuiOutlinedInput-root': {
+              backgroundColor: 'white',
+              '& fieldset': {
+                borderColor: '#e0e0e0',
+              },
+              '&:hover fieldset': {
+                borderColor: '#1976d2',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#1976d2',
+              },
+            },
+            '& .MuiInputLabel-root': {
+              color: '#333',
+            },
+            '& .MuiSelect-select': {
+              color: '#333',
+            },
+          }}>
             <InputLabel>Trạng thái</InputLabel>
             <Select
               value={statusFilter}
@@ -241,6 +312,31 @@ const PromotionManagement = () => {
             page={page}
             onChange={(_, value) => setPage(value)}
             color='primary'
+            sx={{
+              '& .MuiPaginationItem-root': {
+                color: '#333',
+                backgroundColor: 'white',
+                border: '1px solid #e0e0e0',
+                fontWeight: 'medium',
+                '&:hover': {
+                  backgroundColor: '#f5f5f5',
+                  borderColor: '#1976d2',
+                },
+                '&.Mui-selected': {
+                  backgroundColor: '#1976d2',
+                  color: 'white',
+                  borderColor: '#1976d2',
+                  fontWeight: 'bold',
+                  '&:hover': {
+                    backgroundColor: '#1565c0',
+                  },
+                },
+              },
+              '& .MuiPaginationItem-icon': {
+                color: '#333',
+                fontWeight: 'medium',
+              },
+            }}
           />
         </Box>
       )}
@@ -249,64 +345,69 @@ const PromotionManagement = () => {
         <DialogTitle>
           {formData.id ? 'Chỉnh sửa ưu đãi' : 'Thêm ưu đãi mới'}
         </DialogTitle>
-        <DialogContent>
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label='Tên ưu đãi'
-                name='name'
-                value={formData.name}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label='Mã ưu đãi'
-                name='code'
-                value={formData.code}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label='Giảm giá'
-                name='discount'
-                value={formData.discount}
-                onChange={handleChange}
-                placeholder='VD: 20%'
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label='Ngày bắt đầu'
-                  value={formData.startDate}
-                  onChange={handleDateChange('startDate')}
-                  slotProps={{ textField: { fullWidth: true } }}
+        <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+          <DialogContent>
+            <Grid container spacing={2} sx={{ mt: 1 }}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label='Tên ưu đãi'
+                  name='name'
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
                 />
-              </LocalizationProvider>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label='Ngày kết thúc'
-                  value={formData.endDate}
-                  onChange={handleDateChange('endDate')}
-                  slotProps={{ textField: { fullWidth: true } }}
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label='Mã ưu đãi'
+                  name='code'
+                  value={formData.code}
+                  onChange={handleChange}
+                  required
                 />
-              </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label='Giảm giá'
+                  name='discount'
+                  value={formData.discount}
+                  onChange={handleChange}
+                  placeholder='VD: 20%'
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label='Ngày bắt đầu'
+                    value={formData.startDate}
+                    onChange={handleDateChange('startDate')}
+                    slotProps={{ textField: { fullWidth: true, required: true } }}
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label='Ngày kết thúc'
+                    value={formData.endDate}
+                    onChange={handleDateChange('endDate')}
+                    slotProps={{ textField: { fullWidth: true, required: true } }}
+                  />
+                </LocalizationProvider>
+              </Grid>
             </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Hủy</Button>
-          <Button onClick={handleSubmit} variant='contained'>
-            {formData.id ? 'Cập nhật' : 'Thêm'}
-          </Button>
-        </DialogActions>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} disabled={loading}>Hủy</Button>
+            <Button type="submit" variant='contained' disabled={loading}>
+              {loading ? 'Đang xử lý...' : (formData.id ? 'Cập nhật' : 'Thêm')}
+            </Button>
+          </DialogActions>
+        </form>
       </Dialog>
 
       <Dialog open={confirmDelete.open} onClose={() => setConfirmDelete({ open: false, promotionId: null })}>

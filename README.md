@@ -1,42 +1,121 @@
-# Admin Hue Hotel
+# 🏨 Hue Hotel Admin Dashboard
 
-Hệ thống quản lý khách sạn tại Huế
+Hệ thống quản lý khách sạn Hue Hotel với giao diện admin hiện đại và đầy đủ tính năng.
 
-## Tính năng
+## ✨ Tính năng chính
 
-- Quản lý phòng
-- Quản lý đặt phòng
-- Quản lý nhân viên
-- Báo cáo thống kê
-- Quản lý tài chính
+### 🎯 Dashboard
+- Tổng quan phòng và đặt phòng
+- Biểu đồ doanh thu theo thời gian
+- Tỷ lệ sử dụng phòng
+- Hoạt động gần đây
 
-## Cài đặt
+### 👥 Quản lý người dùng
+- Thêm, sửa, xóa người dùng
+- Phân quyền theo vai trò
+- Quản lý thông tin cá nhân
 
+### 🏠 Quản lý phòng
+- Thêm, sửa, xóa phòng
+- Quản lý trạng thái phòng
+- Tìm kiếm và lọc phòng
+- Khuyến mãi mùa hè 30%
+
+### 🎉 Quản lý ưu đãi
+- Tạo và quản lý khuyến mãi
+- Thiết lập thời gian áp dụng
+- Theo dõi hiệu quả khuyến mãi
+
+### 👨‍👩‍👧‍👦 Quản lý khách hàng
+- Thông tin khách hàng chi tiết
+- Lịch sử đặt phòng
+- Tổng chi tiêu và thống kê
+
+### 📅 Quản lý đặt phòng
+- Tạo đặt phòng mới
+- Quản lý trạng thái đặt phòng
+- Lịch sử giao dịch
+
+### 🧾 Kế toán
+- Thống kê doanh thu theo thời gian
+- Quản lý chi phí và lợi nhuận
+- Xuất hóa đơn và báo cáo
+- Tabs: Hôm nay, 7 ngày qua, Tháng này, Quý này, Năm này
+
+### 📊 Thống kê
+- Biểu đồ doanh thu chi tiết
+- Phân tích theo thời gian
+- Báo cáo tổng hợp
+
+## 🚀 Cài đặt và chạy
+
+### Yêu cầu hệ thống
+- Node.js 16+ 
+- npm hoặc yarn
+
+### Cài đặt
 ```bash
+# Clone repository
+git clone https://github.com/voquoctrieu/HueHotelAdmin.git
+
+# Vào thư mục dự án
+cd HueHotelAdmin
+
+# Cài đặt dependencies
 npm install
-```
 
-## Chạy dự án
-
-```bash
+# Chạy dự án
 npm run dev
 ```
 
-## Build
-
+### Build production
 ```bash
 npm run build
+npm run preview
 ```
 
-# React + Vite
+## 🛠️ Công nghệ sử dụng
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- **Frontend**: React 18 + Vite
+- **UI Framework**: Material-UI (MUI)
+- **Charts**: Recharts
+- **Forms**: React Hook Form
+- **Routing**: React Router DOM
+- **Date handling**: Day.js
 
-Currently, two official plugins are available:
+## 📱 Giao diện
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Responsive design cho mọi thiết bị
+- Dark theme hiện đại
+- Giao diện thân thiện người dùng
+- Tối ưu hóa hiệu suất
 
-## Expanding the ESLint configuration
+## 🔐 Phân quyền
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Admin**: Quản lý toàn bộ hệ thống
+- **Receptionist**: Quản lý đặt phòng và check-in/out
+- **Accountant**: Quản lý tài chính và báo cáo
+
+## 📈 Tính năng nổi bật
+
+- Dashboard real-time với dữ liệu động
+- Hệ thống thông báo thông minh
+- Quản lý khuyến mãi linh hoạt
+- Báo cáo tài chính chi tiết
+- Giao diện quản lý trực quan
+
+## 🤝 Đóng góp
+
+Mọi đóng góp đều được chào đón! Hãy tạo issue hoặc pull request.
+
+## 📄 Giấy phép
+
+Dự án này được phát hành dưới giấy phép MIT.
+
+## 👨‍💻 Tác giả
+
+**voquoctrieu** - [GitHub Profile](https://github.com/voquoctrieu)
+
+---
+
+⭐ Nếu dự án này hữu ích, hãy cho chúng tôi một ngôi sao!

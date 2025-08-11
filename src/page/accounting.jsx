@@ -47,7 +47,7 @@ const Accounting = () => {
   const expenses = [
     {
       id: 'CT001',
-      date: '07/08/2024',
+      date: '07/08/2025',
       category: 'Tiền lương',
       description: 'Lương nhân viên tháng 8',
       amount: 2500000,
@@ -55,7 +55,7 @@ const Accounting = () => {
     },
     {
       id: 'CT002',
-      date: '07/08/2024',
+      date: '07/08/2025',
       category: 'Tiện ích',
       description: 'Hóa đơn điện nước tháng 8',
       amount: 350000,
@@ -63,7 +63,7 @@ const Accounting = () => {
     },
     {
       id: 'CT003',
-      date: '06/08/2024',
+      date: '06/08/2025',
       category: 'Bảo trì',
       description: 'Sửa chữa hệ thống điều hòa',
       amount: 180000,

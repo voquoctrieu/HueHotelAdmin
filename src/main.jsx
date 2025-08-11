@@ -16,7 +16,7 @@ const theme = createTheme({
   },
 });
 
-// Thiết lập xử lý lỗi
+
 setupErrorHandling();
 
 createRoot(document.getElementById('root')).render(

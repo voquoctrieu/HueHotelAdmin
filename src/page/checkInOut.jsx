@@ -43,8 +43,8 @@ const CheckInOut = () => {
       id: 1,
       roomNumber: '101',
       guestName: 'Nguyễn Văn A',
-      checkIn: '2024-08-20',
-      checkOut: '2024-08-22',
+      checkIn: '2025-08-20',
+      checkOut: '2025-08-22',
       status: 'Đã check-in',
       payment: 'Đã thanh toán',
     },
@@ -52,8 +52,8 @@ const CheckInOut = () => {
       id: 2,
       roomNumber: '102',
       guestName: 'Trần Thị B',
-      checkIn: '2024-08-21',
-      checkOut: '2024-08-23',
+      checkIn: '2025-08-21',
+      checkOut: '2025-08-23',
       status: 'Chờ check-in',
       payment: 'Chưa thanh toán',
     },
@@ -69,6 +69,7 @@ const CheckInOut = () => {
 
   const [confirmDelete, setConfirmDelete] = useState({ open: false, bookingId: null });
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [loading, setLoading] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -99,20 +100,28 @@ const CheckInOut = () => {
     });
   };
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async () => {
     try {
       setLoading(true);
-      // Gọi API thêm đặt phòng
-    const newBooking = {
-      id: bookings.length + 1,
-        ...data,
-        status: 'confirmed',
-    };
-    setBookings([...bookings, newBooking]);
+      
+      // Validate required fields
+      if (!formData.roomNumber || !formData.guestName || !formData.checkIn || !formData.checkOut || !formData.payment) {
+        setSnackbar({ open: true, message: 'Vui lòng điền đầy đủ thông tin!', severity: 'error' });
+        return;
+      }
+
+      const newBooking = {
+        id: bookings.length + 1,
+        ...formData,
+        checkIn: formData.checkIn.format('YYYY-MM-DD'),
+        checkOut: formData.checkOut.format('YYYY-MM-DD'),
+        status: 'Chờ check-in',
+      };
+      setBookings([...bookings, newBooking]);
       setSnackbar({ open: true, message: 'Thêm đặt phòng thành công!', severity: 'success' });
-    handleClose();
+      handleClose();
     } catch (error) {
-      setError('Có lỗi xảy ra khi thêm đặt phòng');
+      console.error('Error:', error);
       setSnackbar({ open: true, message: 'Có lỗi xảy ra khi thêm đặt phòng', severity: 'error' });
     } finally {
       setLoading(false);
@@ -120,7 +129,7 @@ const CheckInOut = () => {
   };
 
   const handleCheckIn = (id) => {
-    // Gọi API check-in
+   
     setBookings(
       bookings.map((booking) =>
         booking.id === id ? { ...booking, status: 'checked-in' } : booking
@@ -130,7 +139,7 @@ const CheckInOut = () => {
   };
 
   const handleCheckOut = (id) => {
-    // Gọi API check-out
+
     setBookings(
       bookings.map((booking) =>
         booking.id === id ? { ...booking, status: 'checked-out' } : booking
@@ -232,68 +241,72 @@ const CheckInOut = () => {
 
       <Dialog open={open} onClose={handleClose} maxWidth='sm' fullWidth>
         <DialogTitle>Thêm đặt phòng mới</DialogTitle>
-        <DialogContent>
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label='Số phòng'
-                name='roomNumber'
-                value={formData.roomNumber}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label='Tên khách'
-                name='guestName'
-                value={formData.guestName}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label='Ngày check-in'
-                  value={formData.checkIn}
-                  onChange={handleDateChange('checkIn')}
-                  slotProps={{ textField: { fullWidth: true } }}
-                />
-              </LocalizationProvider>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label='Ngày check-out'
-                  value={formData.checkOut}
-                  onChange={handleDateChange('checkOut')}
-                  slotProps={{ textField: { fullWidth: true } }}
-                />
-              </LocalizationProvider>
-            </Grid>
-            <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel>Thanh toán</InputLabel>
-                <Select
-                  name='payment'
-                  value={formData.payment}
+        <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+          <DialogContent>
+            <Grid container spacing={2} sx={{ mt: 1 }}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label='Số phòng'
+                  name='roomNumber'
+                  value={formData.roomNumber}
                   onChange={handleChange}
-                  label='Thanh toán'
-                >
-                  <MenuItem value='Đã thanh toán'>Đã thanh toán</MenuItem>
-                  <MenuItem value='Chưa thanh toán'>Chưa thanh toán</MenuItem>
-                </Select>
-              </FormControl>
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label='Tên khách'
+                  name='guestName'
+                  value={formData.guestName}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label='Ngày check-in'
+                    value={formData.checkIn}
+                    onChange={handleDateChange('checkIn')}
+                    slotProps={{ textField: { fullWidth: true, required: true } }}
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label='Ngày check-out'
+                    value={formData.checkOut}
+                    onChange={handleDateChange('checkOut')}
+                    slotProps={{ textField: { fullWidth: true, required: true } }}
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth required>
+                  <InputLabel>Thanh toán</InputLabel>
+                  <Select
+                    name='payment'
+                    value={formData.payment}
+                    onChange={handleChange}
+                    label='Thanh toán'
+                  >
+                    <MenuItem value='Đã thanh toán'>Đã thanh toán</MenuItem>
+                    <MenuItem value='Chưa thanh toán'>Chưa thanh toán</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
             </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Hủy</Button>
-          <Button onClick={handleSubmit} variant='contained'>
-            Thêm
-          </Button>
-        </DialogActions>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} disabled={loading}>Hủy</Button>
+            <Button type="submit" variant='contained' disabled={loading}>
+              {loading ? 'Đang thêm...' : 'Thêm'}
+            </Button>
+          </DialogActions>
+        </form>
       </Dialog>
 
       <Dialog open={confirmDelete.open} onClose={() => setConfirmDelete({ open: false, bookingId: null })}>
